@@ -255,7 +255,7 @@ export default function EnquirySection() {
                       name="date"
                       value={form.date}
                       onChange={handleChange}
-                      min={new Date().toISOString().split("T")[0]}
+                    //   min={new Date().toISOString().split("T")[0]}
                       className={inputClass}
                     />
                   </div>

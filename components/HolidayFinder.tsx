@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   MapPin,
   Plane,
@@ -12,18 +11,41 @@ import {
   Sparkles,
 } from "lucide-react";
 
+function getTodayString() {
+  const today = new Date();
+  return [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, "0"),
+    String(today.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
 export default function HolidayFinder() {
   const [destination, setDestination] = useState("");
   const [airport, setAirport] = useState("");
   const [date, setDate] = useState("");
   const [travellers, setTravellers] = useState("2 Adults");
   const [message, setMessage] = useState("");
+  const dateInputRef = useRef<HTMLInputElement>(null);
+
+  // Sync the DOM `min` attribute after mount (no setState needed)
+  useEffect(() => {
+    if (dateInputRef.current) {
+      dateInputRef.current.min = getTodayString();
+    }
+  }, []);
 
   function handleSearch(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (!destination || !airport || !date) {
       setMessage("Please complete your destination, airport and travel date.");
+      return;
+    }
+
+    // `min` doesn't block typed/pasted dates in every browser, so check here too
+    if (date < getTodayString()) {
+      setMessage("Please choose a travel date that is today or later.");
       return;
     }
 
@@ -141,16 +163,16 @@ export default function HolidayFinder() {
       </label>
 
       <input
-        id="travel-date"
-        type="date"
-        min={new Date().toISOString().split("T")[0]}
-        value={date}
-        onChange={(e) => {
-          setDate(e.target.value);
-          setMessage("");
-        }}
-        className="w-full bg-transparent text-sm font-semibold text-[#102C2A] outline-none"
-      />
+  id="travel-date"
+  ref={dateInputRef}
+  type="date"
+  value={date}
+  onChange={(e) => {
+    setDate(e.target.value);
+    setMessage("");
+  }}
+  className="w-full bg-transparent text-sm font-semibold text-[#102C2A] outline-none"
+/>
     </div>
 
     {/* Travellers */}

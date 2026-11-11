@@ -93,7 +93,7 @@ export default function Footer() {
         {/* Bottom footer */}
         <div className="flex flex-col gap-6 py-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-white/40">
-            © {new Date().getFullYear()} AwesomeTrips. All rights reserved.
+            © AwesomeTrips. All rights reserved.
           </p>
 
           <div className="flex items-center gap-5">
